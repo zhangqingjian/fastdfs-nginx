@@ -44,6 +44,9 @@ local ossStyle=uri_args["x-oss-process"];
  
 print("ossStyle=",ossStyle)
 
+if ossStyle==nil then
+ngx.exit(400)
+end
 local w_width = string.match(ossStyle, "w_[0-9]+")
 print("w_width=",w_width)
 print("a=",#w_width)
