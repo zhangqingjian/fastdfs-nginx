@@ -1,3 +1,7 @@
+GitHub地址：
+wget https://codeload.github.com/zhangqingjian/fastdfs-nginx/zip/master
+
+
 1、GraphicsMagick 用 RUN yum install -y GraphicsMagick GraphicsMagick-devel 安装
 2、参考 https://github.com/juneryo/fastdfs-nginx
 3、GraphicsMagick 涉及到的命令地址 http://www.graphicsmagick.org/GraphicsMagick.html#details-auto-orient
@@ -54,7 +58,7 @@ docker run -itd \
   --name fastdfs-nginx \
   --network=host \
 --restart=always \
-  -e tracker_server=10.7.23.62:22122 \
+  -e TRACKER_SERVER=10.7.23.62:22122 \
   -v /etc/localtime:/etc/localtime:ro \
   -v /var/log/fdfs/:/data/fdfs/logs/ \
   -v /usr/local/my/:/usr/local/myshare/ \
