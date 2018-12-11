@@ -1,0 +1,63 @@
+1、GraphicsMagick 用 RUN yum install -y GraphicsMagick GraphicsMagick-devel 安装
+2、参考 https://github.com/juneryo/fastdfs-nginx
+3、GraphicsMagick 涉及到的命令地址 http://www.graphicsmagick.org/GraphicsMagick.html#details-auto-orient
+a、命令
+ gm convert -size 800x600 input.jpg \
+              -resize 800x600 -background black \
+              -compose Copy -gravity center \
+              -extent 800x600 \
+              -quality 92 output.jpg
+4、安装docker 环境
+5、配置docker 加速
+a、daocloud  curl -sSL https://get.daocloud.io/daomonit/install.sh | sh -s 36533445641aee6f15e882b57a3b05de32573980
+b、阿里云镜像
+vim  /etc/systemd/system/multi-user.target.wants/docker.service
+找到 ExecStart= 这一行，在这行最后添加加速器地址 --registry-mirror=<加速器地址> ，如：ExecStart=/usr/bin/dockerd --registry-mirror=https://4w6ckiga.mirror.aliyuncs.com
+
+
+安装后需要注意的：
+1、nginx.conf里配置的lua脚本会被 /usr/local/my文件夹给替换掉，导致找不到fastdfs.lua和 openresty.lua两个文件，需要手动copy过来，所以只有在测试的时候需要覆盖/usr/local/myshare/
+2、/data/fdfs/data/为最终所有fastDfs物理文件存放目录，这个需要通过挂载盘，最终挂载到物理存储设备上
+3、启动docker的时候需要 指定tracker_server对应的实际IP地址，否则，绑定127.0.0.1会出错
+4、docker启动后需要查看netstat -tpnl 看是否开启了23000、22122、24001、24002这几个端口，如果哪个没有启动进入docker容器查看日志 cd var/log/fdfs/ 
+   docker exec -it fastdfs-nginx /bin/bash
+5、需要配置定时器 ，这个目前有待商榷
+ 凌晨2点执行，查找目录下面7天内没有被访问的文件并删除，释放空间
+0 2 * * * find /data/images -atime -7 | xargs rm -rf
+6、需要修改 /usr/local/myshare/fastdfs-nginx/lua/fastdfs.lua文件中的 fdfs:set_tracker("10.7.23.62", 22122) 修改fastdfs-tracker的服务器IP
+7、如果需要测试lua脚本输出错误，需要修改nginx.conf文件中的error_log  /var/log/nginx/error.log  debug;
+
+8、Lua在线调试地址 https://www.lua.org/cgi-bin/demo
+
+
+6、修改nginx.conf 增加user nginx，同时需要在dockerfile的脚本中增加 
+RUN useradd -r nginx -s /bin/bash 以保证 nginx可以调用配置中对应的fastdfs.lua脚本
+
+否则会报
+failed to load external Lua file "xxxx.lua": cannot open xxxx.lua: Permission denied
+
+
+7、报Lua中的require的错误原因为 nginx.conf中没有配置自己写的lua文件库，解决方案:
+lua_package_path "/usr/local/myshare/lua/?.lua;;";
+8、 该警告暂时没有解决：detected a LuaJIT version which is not OpenResty's; many optimizations will be disabled and performance will be compromised (see https://github.com/openresty/luajit2 for OpenResty's LuaJIT or, even better, consider using the OpenResty releases from https://openresty.org/en/download.html
+
+9、通过dockerfile构建 fastdfs-nginx镜像 
+docker build -t fastdfs-nginx ./
+
+10、可以通过/etc/nginx/nginx.conf查看nginx配置相关信息
+11、可以通过 cat /var/log/nginx/error.log查看nginx输出的文件信息
+12、查看容器日志 docker logs -f --tail=100 fastdfs-nginx
+13、查看 storage.log   cat /var/log/fdfs/storage.log
+14、查看 tracker.log   cat /var/log/fdfs/traker.log
+docker run -itd \
+  --name fastdfs-nginx \
+  --network=host \
+--restart=always \
+  -e tracker_server=10.7.23.62:22122 \
+  -v /etc/localtime:/etc/localtime:ro \
+  -v /var/log/fdfs/:/data/fdfs/logs/ \
+  -v /usr/local/my/:/usr/local/myshare/ \
+  -v /data/fdfs/data/:/data/fdfs/data/ \
+  -v /var/log/nginx/:/var/log/nginx/ \
+  fastdfs-nginx \
+  sh -c "/usr/bin/fdfs_trackerd /etc/fdfs/tracker.conf restart && /usr/bin/fdfs_storaged /etc/fdfs/storage.conf restart && /usr/sbin/nginx -g 'daemon off;'"
