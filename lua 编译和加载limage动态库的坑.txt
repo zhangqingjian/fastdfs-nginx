@@ -1,0 +1,74 @@
+1、wget -O limage.zip https://codeload.github.com/yufei6808/limage/zip/master
+   unzip 
+2、cd./src  执行  build-linux64.sh
+3、将生成的文件copy到lua的cpackage(C的动态库的加载位置 ，扩展名为.so)识别库下
+cp ../bin/clib/limage.so /usr/local/lib/lua/5.1/
+
+4、测试lua脚本 test.lua   注：该测试脚本在lua 5.3下可以使用，但是不确定是否在lua 5.1下是否有问题
+local path="./1.jpg"
+local lim=require "limage"
+print(type(lim))
+-- 这个是个坑，目前已知的是全局函数image_size(因为动态链接库limage.so中设定了luaopen进行了全局开放)是可以直接调用
+-- 但是lim.limage_size是无法调用的
+local width,height=image_size(path)
+if width and height then
+	print("width=",width)
+ 	print("height=",height)
+  
+end
+
+--查看limage.c中的源码，上面的坑对应在源代码中，源代码中公开了limage_size ,可以用lim.limage_size方式调用，但是--这个不好使
+--也公开了 直接全局调用image_size函数，目前只有这个好使
+
+
+
+int limage_size(lua_State* L)
+{
+	int x, y, comp;
+	FILE* file=NULL;
+	const char* filepath=luaL_checkstring(L,1);
+	file=fopen(filepath,"rb");
+	if(file)
+	{
+		if(stbi_info_from_file(file,&x,&y,&comp)>0)
+		{
+			lua_pushnumber(L,(lua_Number)x);
+			lua_pushnumber(L,(lua_Number)y);
+			fclose(file);
+			return 2;
+		}
+		fclose(file);
+	}
+	return 0;
+}
+/*luaopen 用于指定lua可识别的公开函数名，如果不加luaopen是无法调用limage动态库中的函数的*/
+int luaopen_limage(lua_State* L)
+{
+	/*设定对外开放的函数名为limage_size*/
+	lua_pushcfunction(L,limage_size);
+	/*设定全局访问的函数名为image_size，只要在lua中 调用require 动态.so后就可以直接调用这个全局函数*/
+	lua_setglobal(L,"image_size");
+	return 0;
+}
+
+
+共享函数库文件必须放在特定目录，对于开放源码来说，GNU标准建议所有的函数库文件都放在/usr/local/lib目录下，而且建议命令、可执行程序都放在/usr/local/bin目录下。
+
+将c语言编写的.h和.c文件打包成.so的动态库以供lua调用的问题总结
+1、遇到的坑，编译出来的.so文件出现 	./limage.so: undefined symbol: lua_setglobal 的问题
+a、执行错误的脚本为：
+c语言库地址https://github.com/yufei6808/limage
+gcc -c -O2 -fPIC limage.c
+gcc *.o -shared -o limage.so 
+但是打包出来的limage.so 在调用的时候会出现
+ undefined symbol: lua_setglobal 问题
+原因：因为在gcc构建limage.so的时候， limage.c文件里有#include <lua.h> #include <lauxlib.h>
+那么在打包的时候就需要通过 -I命令把这些.h文件一并打入进来
+b、正确姿势：
+创建lua-headers文件夹，在lua环境下将需要的lua.h和luaxlib.h拷贝进来
+cp -r /usr/local/include/*  /lua-headers
+然后执行打包，命令如下  
+gcc -c -O2 -fPIC limage.c -I../lua-headers
+gcc *.o -shared -o limage.so
+
+此时的limage.so可以正常使用了

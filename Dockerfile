@@ -99,13 +99,20 @@ RUN cd /usr/local/src \
 	&& ln -s /usr/local/lib/libluajit-5.1.so.2 /lib64/libluajit-5.1.so.2  
 ##install Lua
 COPY install/nginx/lua-$LUA_VERSION.tar.gz /usr/local/src/ 
-RUN cd /usr/local/src \
+RUN cd /usr/local/src/ \
 	&& tar -zxf lua-$LUA_VERSION.tar.gz \
 	&& cd lua-$LUA_VERSION \
 	&& make linux \
 	&& make install 
-
-
+##build limage library for lua, to get image width and heigh
+ADD install/fastdfs/limage.zip /usr/src/
+RUN  cd /usr/src \
+	&& unzip limage.zip \
+	&& cd limage-master/src/ \
+	&& chmod +777 ./*  \
+	&& sh build-linux64.sh \
+	&& mkdir -p /usr/local/myshare/fastdfs-nginx/so \
+	&& cp ../bin/clib/limage.so /usr/local/myshare/fastdfs-nginx/so
 ## install nginx with extra modules
 ## refer to： https://github.com/nginxinc/docker-nginx/blob/1.13.2/mainline/alpine/Dockerfile
 ADD install/nginx/nginx-$NGINX_VERSION.tar.gz /usr/src/

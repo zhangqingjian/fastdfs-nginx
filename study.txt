@@ -1,0 +1,105 @@
+https://github.com/fengshao0907/my-fastdfs-client
+利用fastdht对fastdfs的文件维护id映射
+https://blog.csdn.net/tanaduus/article/details/81511829
+
+程序要访问文件，FastDFS提供了java api
+客户端通过HTTP下载文件时，可以走web server，如apache、nginx等
+ 
+4、想要把fastDFS产生的记录清空，再重新搭建一次，应该删除哪些文件
+停止storage server和tracker server，删除base_path下的data子目录即可。
+注意：storage 的data目录下保存了上传文件，删除时请慎重。
+ 
+5、添加文件到fastDFS的data,会被同步到通一个group的其他storage吗
+不会的，直接粘贴到fastdfs的文件不会被同步到同个组的其他storage。
+fastdfs的同步方式是通过data/sync目录下的binlog.000的文件进行的。想要被复制必须保证binlog.000包含添加的文件时间戳+路径
+对应的同一个group的storage会在 data/sync中存在对应的同步标记文件如
+ 
+
+ 
+6、每一个group是否存储了所有的上传文件；还是说group A存储一部分，group B存储一部分，同一个group中的storage server存储的文件都相同。
+A: 答案为后者。即：group A存储一部分，group B存储一部分，同一个group中的storage server存储的文件都相同。
+ 
+7、FastDFS系统中的文件ID与用户存储进去的逻辑文件是不同的，由于没有索引服务器，那么这种文件名映射关系不是要需要由用户自己来保存？
+
+的确如此，目前的确需要由应用端来保存。
+
+FastDFS系统中的文件ID与用户存储进去的逻辑文件是不同的，我有一个客户端，想通过文件名进行操作，不知该怎样实现？也就是说，文件名到ID的转换，我自己写的客户端该怎么转换呢？
+
+像你这样的应用场合，再加一层好了，实现文件名到文件ID的转换。比如可以基于数据库来做，或者通过分布式kv系统，如TT、FastDHT等等来做。
+
+ 
+8、这些Track Server的内容是对等的，还是分组，每个Track Server负责一部分Storage Server?
+对等的。
+
+9、Client是绑定一个Track Server，还是可以绑定多个或全部？
+在一个集群中，应该绑定全部。
+
+10、Storage Server也是同样的问题，是绑定一个Track Server，还是可以多个或者全部？
+在一个集群中，应该绑定全部。
+
+
+11、如果没有绑定全部Tracker Sever，那么Tracker Sever之间可能会出现不一致的情况，这种问题如何解决呢？
+应该绑定所有Tracker server啊。
+万一有个别storage server没有绑定所有tracker server，也不会出现问题。
+正确的做法是绑定所有tracker server。
+
+ 
+
+12. FastDFS需要的编译和运行环境是怎样的？
+FastDFS Server仅支持unix系统，在Linux和FreeBSD测试通过。在Solaris系统下网络通信方面有些问题。
+编译需要的其他库文件有pthread和libevent。
+pthread使用系统自带的即可。
+对libevent的版本要求为1.4.x，建议使用最新的stable版本，如1.4.14b。
+注意，千万不要使用libevent 2.0及以上版本。
+
+13. 启动storage server时，一直处于僵死状态。
+A：启动storage server，storage将连接tracker server，如果连不上，将一直重试。直到连接成功，启动才算真正完成。
+出现这样情况，请检查连接不上tracker server的原因。
+
+14. 执行fdfs_test或fdfs_test1上传文件时，服务器返回错误号2
+错误号表示没有ACTIVE状态的storage server。可以执行fdfs_monitor查看服务器状态。
+
+15. 如何让server进程退出运行？
+直接kill即可让server进程正常退出，可以使用killall命令，例如：
+
+killall fdfs_trackerd
+killall fdfs_storaged
+
+也可以使用FastDFS自带的stop.sh脚本，如：
+
+1
+/usr/local/bin/stop.sh  /usr/local/bin/fdfs_storaged /etc/fdfs/storage.conf
+ 
+
+ 
+
+stop.sh只会停止命令行（包括参数）完全相同的进程。
+千万不要使用-9参数强杀，否则可能会导致binlog数据丢失的问题。
+
+16. 如何重启server进程？
+可以kill掉server进程后，执行启动命令行。如：
+
+killall fdfs_trackerd
+/usr/local/bin/fdfs_trackerd /etc/fdfs/tracker.conf
+
+或者直接使用FastDFS自带的restart.sh脚本，如：
+
+/usr/local/bin/restart.sh  /usr/local/bin/fdfs_trackerd /etc/fdfs/tracker.conf
+
+17. 跨运营商通信异常问题
+比如电信和网通机房相互通信，可能会存在异常，有两种表现：
+  1）不能建立连接，这个比较直接，肯定是网络连接的问题
+  2）可以正常建立连接，但接收和发送数据失败，这个问题比较隐蔽，正常网络环境下，不应该出现此类问题。
+       还有人碰到过从一个方向建立连接可以正常通信，但从另外一个方向就不能正常通信的情况。
+解决办法：
+  尝试将服务端口改小，建议将端口修改为1024以下。比如将storage服务端口由23000修改为873等，也可以试试修改为8080
+  如果问题还不能解决，请联系你的网络（机房）服务商。
+
+18. fdfs_test和fdfs_test1是做什么用的？
+   这两个是FastDFS自带的测试程序，会对一个文件上传两次，分别作为主文件和从文件。返回的文件ID也是两个。
+   并且会上传文件附加属性，storage server上会生成4个文件。
+   这两个程序仅用于测试目的，请不要用作实际用途。
+   V2.05提供了比较正式的三个小工具：
+      上传文件：/usr/local/bin/fdfs_upload_file  <config_file> <local_filename>
+      下载文件：/usr/local/bin/fdfs_download_file <config_file> <file_id> [local_filename]
+       删除文件：/usr/local/bin/fdfs_delete_file <config_file> <file_id>
