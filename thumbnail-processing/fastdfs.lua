@@ -73,11 +73,13 @@ end
 local originalUri = ngx.var.uri
 --/data/fdfs/data/00/00/CgcXPlwOPFmEKxzaAAAAAORd3Es082.jpg?x-oss-process=image/resize,m_fill,w_90,h_80
 local originalFile = ngx.var.file;
---print("originalUri=",originalUri)
---print("originalFile=",originalFile)
+
+print("$image_name=",ngx.var.image_name)
+print("originalUri=",originalUri)
+print("originalFile=",originalFile)
+ 
 local uri_args = ngx.req.get_uri_args()
 local ossStyle=uri_args["x-oss-process"]
---print("ossStyle=",ossStyle)
 
 if ossStyle==nil then
 ngx.exit(400)
@@ -117,7 +119,6 @@ if not file_exists(originalFile) then
         writefile(originalFile, data)
     end
 end
---如果被缩略的原文件还是不存在,则返回404
 if file_exists(originalFile)==false then
    return ngx.exit(404)
 end
@@ -137,9 +138,14 @@ if next(dpiArray) ~= nil and #dpiArray>1 then
 	
 end		
 local area=width.."x"..height
---print("area=",area)
-local newFile=originalFile.."_"..area..".jpg"
-local newUrl=originalUri.."_"..area..".jpg"
+--/data/fdfs/data/thumbnail/
+local thumbnailRoot=ngx.var.thumbnail_root
+local thumbnailRootUrl=ngx.var.thumbnail_root_url
+--/data/fdfs/data/thumbnail/CgcXP1yPgN-Ebz1TAAAAAPOGt2M582.jpg_350x350.jpg
+local newFile=thumbnailRoot..ngx.var.image_name.."_"..area..".jpg"
+--/group1/M00/00/00/CgcXPlwOPFmEKxzaAAAAAORd3Es082.jpg
+--/group1/M00/thumbnail/CgcXPlwOPFmEKxzaAAAAAORd3Es082.jpg
+local newUrl=thumbnailRootUrl..ngx.var.image_name.."_"..area..".jpg"
 
 --print("newFile=",newFile)
 --print("newUrl=",newUrl)
@@ -149,6 +155,7 @@ if file_exists(newFile) then
    return ngx.exec(newUrl)
 end
  
+
 ---gravity center -extent 是能去掉黑底和白边
 -- refer https://yq.aliyun.com/ziliao/589489
 --print("gm do ","======")

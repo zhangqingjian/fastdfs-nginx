@@ -60,7 +60,21 @@ docker build -t fastdfs-nginx ./
 15、重新启动nginx    /usr/sbin/nginx -s reload
 16、docker exec -it fastdfs-nginx /bin/bash
 17、最终fastdfs上传的文件会在 data/sync文件夹中生成一个叫 binlog.000 的文件，里面记录了所有已上传的文件列表
+18、加载C写的limage.so的坑
+   a、错误为nginx执行lua代码调用limage.so，第一次可以调用limage.so中的image_size函数，第二次就会出现attempt to call global 'image_size' (a nil value)
+   b、解决方案：
+      要将fastdfs.lua中的  local lim= require "limage"  local width,height= image_size(path) 这段代码中的 require "limage"放到nginx.conf中去
+      正确的写法
+        init_by_lua 'require "limage"';
 
+	## server port for fastdfs
+    
+       server {
+       
+	 listen       24002;
+         ......
+        
+#在fastdfs.lua中才不会出现attempt to call global 'image_size' (a nil value)的错误，否则是执行代码第一次能执行，但是，第二次就调用不了了
 ln -s /usr/local/src/lua-5.3.1/src/lua /usr/bin/lua
 
 ln -s /usr/local/src/lua-5.3.1/src/clua /usr/bin/clua
