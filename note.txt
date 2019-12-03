@@ -100,4 +100,10 @@ docker run -itd \
   fastdfs-nginx \
   sh -c "/usr/bin/fdfs_trackerd /etc/fdfs/tracker.conf restart && /usr/bin/fdfs_storaged /etc/fdfs/storage.conf restart && /usr/sbin/nginx -g 'daemon off;'"
 
+
+图片编辑器：
+1、比如：如果想按照以高为准,宽度自适应，则只传h_*就可以了
+http://10.7.23.7:24002/group1/M00/00/00/CgcXP13mWo6EZD3SAAAAABfcgtA036.jpg?x-oss-process=resize,m_fill,h_300
+2、比如：如果想按照以宽为准，高度自适应，则只传w_*就可以了
+http://10.7.23.7:24002/group1/M00/00/00/CgcXP13mWo6EZD3SAAAAABfcgtA036.jpg?x-oss-process=resize,m_fill,w_300
  
