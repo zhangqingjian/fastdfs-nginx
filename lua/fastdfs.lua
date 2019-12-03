@@ -1,25 +1,25 @@
 --[[ 
-	ÅäÖÃÏî£¬¶ÔÄ¿Â¼¡¢ËõÂÔÍ¼³ß´ç¡¢²Ã¼ôÀàĞÍ½øĞĞÅäÖÃ£¬Æ¥Åäºó²Å½øĞĞËõÂÔÍ¼´¦Àí
-	1.sizes={'350x350'} Ìî³äºó±£Ö¤µÈ±ÈËõÍ¼
-	2.sizes={'300x300_'}µÈ±ÈËõÍ¼
-	3.sizes={'250x250!'}·ÇµÈ±ÈËõÍ¼£¬°´¸ø¶¨µÄ²ÎÊıËõÍ¼£¨È±µã£º³¤¿í±È»á±ä»¯£©	
-	4.sizes={'50x50^'}²Ã¼ôºó±£Ö¤µÈ±ÈËõÍ¼ £¨È±µã£º²Ã¼ôÁËÍ¼Æ¬µÄÒ»²¿·Ö£©	
-	5.sizes={'100x100>'}Ö»ËõĞ¡²»·Å´ó		
-	6.sizes={'140x140$'}ÏŞÖÆ¿í¶È£¬Ö»ËõĞ¡²»·Å´ó(±ÈÈçÍøÒ³°æÍ¼Æ¬ÓÃÓÚÊÖ»ú°æÊ±)	Ä¿Ç°²âÊÔGraphicsMagickÕâ¸ö°æ±¾²»Ö§³Ö
+	é…ç½®é¡¹ï¼Œå¯¹ç›®å½•ã€ç¼©ç•¥å›¾å°ºå¯¸ã€è£å‰ªç±»å‹è¿›è¡Œé…ç½®ï¼ŒåŒ¹é…åæ‰è¿›è¡Œç¼©ç•¥å›¾å¤„ç†
+	1.sizes={'350x350'} å¡«å……åä¿è¯ç­‰æ¯”ç¼©å›¾
+	2.sizes={'300x300_'}ç­‰æ¯”ç¼©å›¾
+	3.sizes={'250x250!'}éç­‰æ¯”ç¼©å›¾ï¼ŒæŒ‰ç»™å®šçš„å‚æ•°ç¼©å›¾ï¼ˆç¼ºç‚¹ï¼šé•¿å®½æ¯”ä¼šå˜åŒ–ï¼‰	
+	4.sizes={'50x50^'}è£å‰ªåä¿è¯ç­‰æ¯”ç¼©å›¾ ï¼ˆç¼ºç‚¹ï¼šè£å‰ªäº†å›¾ç‰‡çš„ä¸€éƒ¨åˆ†ï¼‰	
+	5.sizes={'100x100>'}åªç¼©å°ä¸æ”¾å¤§		
+	6.sizes={'140x140$'}é™åˆ¶å®½åº¦ï¼Œåªç¼©å°ä¸æ”¾å¤§(æ¯”å¦‚ç½‘é¡µç‰ˆå›¾ç‰‡ç”¨äºæ‰‹æœºç‰ˆæ—¶)	ç›®å‰æµ‹è¯•GraphicsMagickè¿™ä¸ªç‰ˆæœ¬ä¸æ”¯æŒ
 	
  @ !
 ]]
 
 
--- Ğ´ÈëÎÄ¼ş
+-- å†™å…¥æ–‡ä»¶
 local function writefile(filename, info)
-    local wfile=io.open(filename, "w") --Ğ´ÈëÎÄ¼ş(w¸²¸Ç)
-    assert(wfile)  --´ò¿ªÊ±ÑéÖ¤ÊÇ·ñ³ö´í		
-    wfile:write(info)  --Ğ´Èë´«ÈëµÄÄÚÈİ
-    wfile:close()  --µ÷ÓÃ½áÊøºó¼ÇµÃ¹Ø±Õ
+    local wfile=io.open(filename, "w") --å†™å…¥æ–‡ä»¶(wè¦†ç›–)
+    assert(wfile)  --æ‰“å¼€æ—¶éªŒè¯æ˜¯å¦å‡ºé”™		
+    wfile:write(info)  --å†™å…¥ä¼ å…¥çš„å†…å®¹
+    wfile:close()  --è°ƒç”¨ç»“æŸåè®°å¾—å…³é—­
 end
 
--- ¼ì²âÂ·¾¶ÊÇ·ñÄ¿Â¼
+-- æ£€æµ‹è·¯å¾„æ˜¯å¦ç›®å½•
 local function is_dir(sPath)
     if type(sPath) ~= "string" then return false end
     local response = os.execute( "cd " .. sPath )
@@ -28,13 +28,13 @@ local function is_dir(sPath)
     end
     return false
 end
---»ñÈ¡Í¼Æ¬µÄ¿íºÍ¸ß
+--è·å–å›¾ç‰‡çš„å®½å’Œé«˜
 local function getImageSize(path)
 	--print("getImageSize path",path)
-    --¶ÁÈ¡ÎÄ¼ş´óĞ¡ºÍÍ¼Æ¬¿í¸ß
+    --è¯»å–æ–‡ä»¶å¤§å°å’Œå›¾ç‰‡å®½é«˜
     dpi = {}
     if path then
-        -- --ÒªÏÈ°²×°https://github.com/keplerproject/luafilesystem/
+        -- --è¦å…ˆå®‰è£…https://github.com/keplerproject/luafilesystem/
         -- local lfs   = require('lfs')
         -- --local filepath="./ed724426a341d666369a244a2e8c54ad.jpg"
 
@@ -47,11 +47,11 @@ local function getImageSize(path)
         -- if size ~=  nil and tonumber(size) >= 0 then
             -- reslimage["size"] = size
         -- end	 		
-      --ÒªÏÈ°²×°https://github.com/yufei6808/limage
-	     --¸Ã´¦ÊÇnginxµÄlua¼ÓÔØCĞ´µÄlimage.soµÄ¿Ó£¬Ä¿Ç°Ö»Òª½«µ÷ÓÃµÄlimage.soµÄÒıÈë·ÅÔÚ¸Ã´¦£¬
-	    --ÔÚfastdfs.luaÖĞ²Å²»»á³öÏÖattempt to call global 'image_size' (a nil value)µÄ´íÎó£¬·ñÔòÊÇÖ´ĞĞ´úÂëµÚÒ»´ÎÄÜÖ´ĞĞ£¬µ«ÊÇ£¬µÚ¶ş´Î¾Íµ÷ÓÃ²»ÁËÁË
+      --è¦å…ˆå®‰è£…https://github.com/yufei6808/limage
+	     --è¯¥å¤„æ˜¯nginxçš„luaåŠ è½½Cå†™çš„limage.soçš„å‘ï¼Œç›®å‰åªè¦å°†è°ƒç”¨çš„limage.soçš„å¼•å…¥æ”¾åœ¨è¯¥å¤„ï¼Œ
+	    --åœ¨fastdfs.luaä¸­æ‰ä¸ä¼šå‡ºç°attempt to call global 'image_size' (a nil value)çš„é”™è¯¯ï¼Œå¦åˆ™æ˜¯æ‰§è¡Œä»£ç ç¬¬ä¸€æ¬¡èƒ½æ‰§è¡Œï¼Œä½†æ˜¯ï¼Œç¬¬äºŒæ¬¡å°±è°ƒç”¨ä¸äº†äº†
 		  -- local lim   = require('limage')
-           --²»ÄÜÊ¹ÓÃlocal width,height=lim.limage_size(path)Õâ¾ä»°£¬limÎªbooleanÖµ£¬Ö»ÄÜµ÷ÓÃÈ«¾ÖµÄimage_sizeº¯Êı¡£
+           --ä¸èƒ½ä½¿ç”¨local width,height=lim.limage_size(path)è¿™å¥è¯ï¼Œlimä¸ºbooleanå€¼ï¼Œåªèƒ½è°ƒç”¨å…¨å±€çš„image_sizeå‡½æ•°ã€‚
 		local width,height=image_size(path)
         if width and height then
 			--print("width=",width)
@@ -64,7 +64,7 @@ local function getImageSize(path)
     return dpi
 end
 
--- ¼ì²âÎÄ¼şÊÇ·ñ´æÔÚ
+-- æ£€æµ‹æ–‡ä»¶æ˜¯å¦å­˜åœ¨
 local file_exists = function(name)
     local f=io.open(name,"r")
     if f~=nil then io.close(f) return true else return false end
@@ -117,7 +117,7 @@ if not file_exists(originalFile) then
         writefile(originalFile, data)
     end
 end
---Èç¹û±»ËõÂÔµÄÔ­ÎÄ¼ş»¹ÊÇ²»´æÔÚ,Ôò·µ»Ø404
+--å¦‚æœè¢«ç¼©ç•¥çš„åŸæ–‡ä»¶è¿˜æ˜¯ä¸å­˜åœ¨,åˆ™è¿”å›404
 if file_exists(originalFile)==false then
    return ngx.exit(404)
 end
@@ -144,15 +144,15 @@ local newUrl=originalUri.."_"..area..".jpg"
 --print("newFile=",newFile)
 --print("newUrl=",newUrl)
 
---Èç¹ûËõÂÔÍ¼ÒÑ¾­´æÔÚÁË£¬ÔòÖ±½Ó·µ»Ø´æÔÚµÄËõÂÔÍ¼
+--å¦‚æœç¼©ç•¥å›¾å·²ç»å­˜åœ¨äº†ï¼Œåˆ™ç›´æ¥è¿”å›å­˜åœ¨çš„ç¼©ç•¥å›¾
 if file_exists(newFile) then
    return ngx.exec(newUrl)
 end
  
----gravity center -extent ÊÇÄÜÈ¥µôºÚµ×ºÍ°×±ß
+---gravity center -extent æ˜¯èƒ½å»æ‰é»‘åº•å’Œç™½è¾¹
 -- refer https://yq.aliyun.com/ziliao/589489
 --print("gm do ","======")
-local cmd = "gm convert " .. originalFile  .. " -thumbnail " .. area .."".. " -auto-orient -gravity NorthWest -extent   " .. area;
+local cmd = "gm convert " .. originalFile  .. " -thumbnail " .. area .."".. " -auto-orient -gravity center -extent   " .. area;
 cmd = cmd .. " -quality 75"
 cmd = cmd .. " +profile \"*\" " .. newFile;
 os.execute(cmd);
@@ -162,7 +162,7 @@ if file_exists(newFile) then
 else
    return ngx.exit(404)
 end
---È¥³ıÀ©Õ¹Ãû
+--å»é™¤æ‰©å±•å
 local function stripextension(filename)
     local idx = filename:match(".+()%.%w+$")
     if (idx) then
@@ -172,7 +172,7 @@ local function stripextension(filename)
     end
 end
 
---»ñÈ¡À©Õ¹Ãû
+--è·å–æ‰©å±•å
 local function getExtension(filename)
     return filename:match(".+%.(%w+)$")
 end
