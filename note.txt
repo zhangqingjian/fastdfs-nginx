@@ -106,4 +106,21 @@ docker run -itd \
 http://10.7.23.7:24002/group1/M00/00/00/CgcXP13mWo6EZD3SAAAAABfcgtA036.jpg?x-oss-process=resize,m_fill,h_300
 2、比如：如果想按照以宽为准，高度自适应，则只传w_*就可以了
 http://10.7.23.7:24002/group1/M00/00/00/CgcXP13mWo6EZD3SAAAAABfcgtA036.jpg?x-oss-process=resize,m_fill,w_300
+
+关于ip有几点注意的地方
+因为fastdfs最终是通过tracker_server向外提供图片服务的，所以tracker_server的ip地址必须要对外能访问的
+1、vagrant的vagrantfile配置为config.vm.network "public_network",ip:"10.7.23.63"
+2、docker 构建实例的时候TRACKER_SERVER=10.7.23.63:22122 要指定Ip
+
+调试Lua
+为了能时刻调试fastdfs.lua(用于nginx调用实现图片裁剪，生成缩略图的)
+所以用vagrant的时候需要注意以下几点
+1、vagrant的vagrantfile 需要做路径映射 config.vm.synced_folder "D:/development/virtualbox+vagrant/linux-share/fastdfs-nginx-master", "/usr/local/my"
+2、docker实例构建的时候需要用-v /usr/local/my/:/usr/local/myshare/ \
+3、在nginx.conf中是引用了lua位置的，
+...
+lua_package_path "/usr/local/myshare/fastdfs-nginx/lua
+....
+4、这样每次需要调试lua，则可以透过vagrant 到docker，再到nginx对应的fastdfs.lua文件进行编辑，只要修改后重启nginx即可
+
  
