@@ -1,70 +1,70 @@
 
-gdbµ÷ÊÔlua
+gdbè°ƒè¯•lua
 
 
-GitHubµØÖ·£º
+GitHubåœ°å€ï¼š
 wget https://codeload.github.com/zhangqingjian/fastdfs-nginx/zip/master
 
 
-1¡¢GraphicsMagick ÓÃ RUN yum install -y GraphicsMagick GraphicsMagick-devel °²×°
-2¡¢²Î¿¼ https://github.com/juneryo/fastdfs-nginx
-3¡¢GraphicsMagick Éæ¼°µ½µÄÃüÁîµØÖ· http://www.graphicsmagick.org/GraphicsMagick.html#details-auto-orient
-a¡¢ÃüÁî
+1ã€GraphicsMagick ç”¨ RUN yum install -y GraphicsMagick GraphicsMagick-devel å®‰è£…
+2ã€å‚è€ƒ https://github.com/juneryo/fastdfs-nginx
+3ã€GraphicsMagick æ¶‰åŠåˆ°çš„å‘½ä»¤åœ°å€ http://www.graphicsmagick.org/GraphicsMagick.html#details-auto-orient
+aã€å‘½ä»¤
  gm convert -size 800x600 input.jpg \
               -resize 800x600 -background black \
               -compose Copy -gravity center \
               -extent 800x600 \
               -quality 92 output.jpg
-4¡¢°²×°docker »·¾³
-5¡¢ÅäÖÃdocker ¼ÓËÙ
-a¡¢daocloud  curl -sSL https://get.daocloud.io/daomonit/install.sh | sh -s 36533445641aee6f15e882b57a3b05de32573980
-b¡¢°¢ÀïÔÆ¾µÏñ
+4ã€å®‰è£…docker ç¯å¢ƒ
+5ã€é…ç½®docker åŠ é€Ÿ
+aã€daocloud  curl -sSL https://get.daocloud.io/daomonit/install.sh | sh -s 36533445641aee6f15e882b57a3b05de32573980
+bã€é˜¿é‡Œäº‘é•œåƒ
 vim  /etc/systemd/system/multi-user.target.wants/docker.service
-ÕÒµ½ ExecStart= ÕâÒ»ĞĞ£¬ÔÚÕâĞĞ×îºóÌí¼Ó¼ÓËÙÆ÷µØÖ· --registry-mirror=<¼ÓËÙÆ÷µØÖ·> £¬Èç£ºExecStart=/usr/bin/dockerd --registry-mirror=https://4w6ckiga.mirror.aliyuncs.com
+æ‰¾åˆ° ExecStart= è¿™ä¸€è¡Œï¼Œåœ¨è¿™è¡Œæœ€åæ·»åŠ åŠ é€Ÿå™¨åœ°å€ --registry-mirror=<åŠ é€Ÿå™¨åœ°å€> ï¼Œå¦‚ï¼šExecStart=/usr/bin/dockerd --registry-mirror=https://4w6ckiga.mirror.aliyuncs.com
 
  
-°²×°ºóĞèÒª×¢ÒâµÄ£º
-1¡¢nginx.confÀïÅäÖÃµÄlua½Å±¾»á±» /usr/local/myÎÄ¼ş¼Ğ¸øÌæ»»µô£¬µ¼ÖÂÕÒ²»µ½fastdfs.luaºÍ openresty.luaÁ½¸öÎÄ¼ş£¬ĞèÒªÊÖ¶¯copy¹ıÀ´£¬ËùÒÔÖ»ÓĞÔÚ²âÊÔµÄÊ±ºòĞèÒª¸²¸Ç/usr/local/myshare/
-2¡¢/data/fdfs/data/Îª×îÖÕËùÓĞfastDfsÎïÀíÎÄ¼ş´æ·ÅÄ¿Â¼£¬Õâ¸öĞèÒªÍ¨¹ı¹ÒÔØÅÌ£¬×îÖÕ¹ÒÔØµ½ÎïÀí´æ´¢Éè±¸ÉÏ
-3¡¢Æô¶¯dockerµÄÊ±ºòĞèÒª Ö¸¶¨tracker_server¶ÔÓ¦µÄÊµ¼ÊIPµØÖ·£¬·ñÔò£¬°ó¶¨127.0.0.1»á³ö´í
-4¡¢dockerÆô¶¯ºóĞèÒª²é¿´netstat -tpnl ¿´ÊÇ·ñ¿ªÆôÁË23000¡¢22122¡¢24001¡¢24002Õâ¼¸¸ö¶Ë¿Ú£¬Èç¹ûÄÄ¸öÃ»ÓĞÆô¶¯½øÈëdockerÈİÆ÷²é¿´ÈÕÖ¾ cd var/log/fdfs/ 
+å®‰è£…åéœ€è¦æ³¨æ„çš„ï¼š
+1ã€nginx.confé‡Œé…ç½®çš„luaè„šæœ¬ä¼šè¢« /usr/local/myæ–‡ä»¶å¤¹ç»™æ›¿æ¢æ‰ï¼Œå¯¼è‡´æ‰¾ä¸åˆ°fastdfs.luaå’Œ openresty.luaä¸¤ä¸ªæ–‡ä»¶ï¼Œéœ€è¦æ‰‹åŠ¨copyè¿‡æ¥ï¼Œæ‰€ä»¥åªæœ‰åœ¨æµ‹è¯•çš„æ—¶å€™éœ€è¦è¦†ç›–/usr/local/myshare/
+2ã€/data/fdfs/data/ä¸ºæœ€ç»ˆæ‰€æœ‰fastDfsç‰©ç†æ–‡ä»¶å­˜æ”¾ç›®å½•ï¼Œè¿™ä¸ªéœ€è¦é€šè¿‡æŒ‚è½½ç›˜ï¼Œæœ€ç»ˆæŒ‚è½½åˆ°ç‰©ç†å­˜å‚¨è®¾å¤‡ä¸Š
+3ã€å¯åŠ¨dockerçš„æ—¶å€™éœ€è¦ æŒ‡å®štracker_serverå¯¹åº”çš„å®é™…IPåœ°å€ï¼Œå¦åˆ™ï¼Œç»‘å®š127.0.0.1ä¼šå‡ºé”™
+4ã€dockerå¯åŠ¨åéœ€è¦æŸ¥çœ‹netstat -tpnl çœ‹æ˜¯å¦å¼€å¯äº†23000ã€22122ã€24001ã€24002è¿™å‡ ä¸ªç«¯å£ï¼Œå¦‚æœå“ªä¸ªæ²¡æœ‰å¯åŠ¨è¿›å…¥dockerå®¹å™¨æŸ¥çœ‹æ—¥å¿— cd var/log/fdfs/ 
    
-5¡¢ĞèÒªÅäÖÃ¶¨Ê±Æ÷ £¬Õâ¸öÄ¿Ç°ÓĞ´ıÉÌÈ¶
- Áè³¿2µãÖ´ĞĞ£¬²éÕÒÄ¿Â¼ÏÂÃæ7ÌìÄÚÃ»ÓĞ±»·ÃÎÊµÄÎÄ¼ş²¢É¾³ı£¬ÊÍ·Å¿Õ¼ä
+5ã€éœ€è¦é…ç½®å®šæ—¶å™¨ ï¼Œè¿™ä¸ªç›®å‰æœ‰å¾…å•†æ¦·
+ å‡Œæ™¨2ç‚¹æ‰§è¡Œï¼ŒæŸ¥æ‰¾ç›®å½•ä¸‹é¢7å¤©å†…æ²¡æœ‰è¢«è®¿é—®çš„æ–‡ä»¶å¹¶åˆ é™¤ï¼Œé‡Šæ”¾ç©ºé—´
 0 2 * * * find /data/images -atime -7 | xargs rm -rf
-6¡¢ĞèÒªĞŞ¸Ä /usr/local/myshare/fastdfs-nginx/lua/fastdfs.luaÎÄ¼şÖĞµÄ fdfs:set_tracker("10.7.23.63", 22122) ĞŞ¸Äfastdfs-trackerµÄ·şÎñÆ÷IP ,ÒòÎªvagrantÊÇĞèÒªÉè¶¨Ò»¸öÖ¸¶¨µÄÄÚÍøIPµÄ
-7¡¢Èç¹ûĞèÒª²âÊÔlua½Å±¾Êä³ö´íÎó£¬ĞèÒªĞŞ¸Änginx.confÎÄ¼şÖĞµÄerror_log  /var/log/nginx/error.log  debug;
+6ã€éœ€è¦ä¿®æ”¹ /usr/local/myshare/fastdfs-nginx/lua/fastdfs.luaæ–‡ä»¶ä¸­çš„ fdfs:set_tracker("10.7.23.63", 22122) ä¿®æ”¹fastdfs-trackerçš„æœåŠ¡å™¨IP ,å› ä¸ºvagrantæ˜¯éœ€è¦è®¾å®šä¸€ä¸ªæŒ‡å®šçš„å†…ç½‘IPçš„
+7ã€å¦‚æœéœ€è¦æµ‹è¯•luaè„šæœ¬è¾“å‡ºé”™è¯¯ï¼Œéœ€è¦ä¿®æ”¹nginx.confæ–‡ä»¶ä¸­çš„error_log  /var/log/nginx/error.log  debug;
 
-8¡¢LuaÔÚÏßµ÷ÊÔµØÖ· https://www.lua.org/cgi-bin/demo
+8ã€Luaåœ¨çº¿è°ƒè¯•åœ°å€ https://www.lua.org/cgi-bin/demo
 
 
-6¡¢ĞŞ¸Änginx.conf Ôö¼Óuser nginx£¬Í¬Ê±ĞèÒªÔÚdockerfileµÄ½Å±¾ÖĞÔö¼Ó 
-RUN useradd -r nginx -s /bin/bash ÒÔ±£Ö¤ nginx¿ÉÒÔµ÷ÓÃÅäÖÃÖĞ¶ÔÓ¦µÄfastdfs.lua½Å±¾
+6ã€ä¿®æ”¹nginx.conf å¢åŠ user nginxï¼ŒåŒæ—¶éœ€è¦åœ¨dockerfileçš„è„šæœ¬ä¸­å¢åŠ  
+RUN useradd -r nginx -s /bin/bash ä»¥ä¿è¯ nginxå¯ä»¥è°ƒç”¨é…ç½®ä¸­å¯¹åº”çš„fastdfs.luaè„šæœ¬
 
-·ñÔò»á±¨
+å¦åˆ™ä¼šæŠ¥
 failed to load external Lua file "xxxx.lua": cannot open xxxx.lua: Permission denied
 
 
-7¡¢±¨LuaÖĞµÄrequireµÄ´íÎóÔ­ÒòÎª nginx.confÖĞÃ»ÓĞÅäÖÃ×Ô¼ºĞ´µÄluaÎÄ¼ş¿â£¬½â¾ö·½°¸:
+7ã€æŠ¥Luaä¸­çš„requireçš„é”™è¯¯åŸå› ä¸º nginx.confä¸­æ²¡æœ‰é…ç½®è‡ªå·±å†™çš„luaæ–‡ä»¶åº“ï¼Œè§£å†³æ–¹æ¡ˆ:
 lua_package_path "/usr/local/myshare/lua/?.lua;;";
-8¡¢ ¸Ã¾¯¸æÔİÊ±Ã»ÓĞ½â¾ö£ºdetected a LuaJIT version which is not OpenResty's; many optimizations will be disabled and performance will be compromised (see https://github.com/openresty/luajit2 for OpenResty's LuaJIT or, even better, consider using the OpenResty releases from https://openresty.org/en/download.html
+8ã€ è¯¥è­¦å‘Šæš‚æ—¶æ²¡æœ‰è§£å†³ï¼šdetected a LuaJIT version which is not OpenResty's; many optimizations will be disabled and performance will be compromised (see https://github.com/openresty/luajit2 for OpenResty's LuaJIT or, even better, consider using the OpenResty releases from https://openresty.org/en/download.html
 
-9¡¢Í¨¹ıdockerfile¹¹½¨ fastdfs-nginx¾µÏñ 
+9ã€é€šè¿‡dockerfileæ„å»º fastdfs-nginxé•œåƒ 
 docker build -t fastdfs-nginx ./
 
-10¡¢¿ÉÒÔÍ¨¹ıvi /etc/nginx/nginx.conf²é¿´nginxÅäÖÃÏà¹ØĞÅÏ¢
-11¡¢¿ÉÒÔÍ¨¹ı cat /var/log/nginx/error.log²é¿´nginxÊä³öµÄÎÄ¼şĞÅÏ¢
-12¡¢²é¿´ÈİÆ÷ÈÕÖ¾ docker logs -f --tail=100 fastdfs-nginx
-13¡¢²é¿´ storage.log   cat /var/log/fdfs/storage.log
-14¡¢²é¿´ tracker.log   cat /var/log/fdfs/traker.log
-15¡¢ÖØĞÂÆô¶¯nginx    /usr/sbin/nginx -s reload
-16¡¢docker exec -it fastdfs-nginx /bin/bash
-17¡¢×îÖÕfastdfsÉÏ´«µÄÎÄ¼ş»áÔÚ data/syncÎÄ¼ş¼ĞÖĞÉú³ÉÒ»¸ö½Ğ binlog.000 µÄÎÄ¼ş£¬ÀïÃæ¼ÇÂ¼ÁËËùÓĞÒÑÉÏ´«µÄÎÄ¼şÁĞ±í
-18¡¢¼ÓÔØCĞ´µÄlimage.soµÄ¿Ó
-   a¡¢´íÎóÎªnginxÖ´ĞĞlua´úÂëµ÷ÓÃlimage.so£¬µÚÒ»´Î¿ÉÒÔµ÷ÓÃlimage.soÖĞµÄimage_sizeº¯Êı£¬µÚ¶ş´Î¾Í»á³öÏÖattempt to call global 'image_size' (a nil value)
-   b¡¢½â¾ö·½°¸£º
-      Òª½«fastdfs.luaÖĞµÄ  local lim= require "limage"  local width,height= image_size(path) Õâ¶Î´úÂëÖĞµÄ require "limage"·Åµ½nginx.confÖĞÈ¥
-      ÕıÈ·µÄĞ´·¨
+10ã€å¯ä»¥é€šè¿‡vi /etc/nginx/nginx.confæŸ¥çœ‹nginxé…ç½®ç›¸å…³ä¿¡æ¯
+11ã€å¯ä»¥é€šè¿‡ cat /var/log/nginx/error.logæŸ¥çœ‹nginxè¾“å‡ºçš„æ–‡ä»¶ä¿¡æ¯
+12ã€æŸ¥çœ‹å®¹å™¨æ—¥å¿— docker logs -f --tail=100 fastdfs-nginx
+13ã€æŸ¥çœ‹ storage.log   cat /var/log/fdfs/storaged.log
+14ã€æŸ¥çœ‹ tracker.log   cat /var/log/fdfs/trackerd.log
+15ã€é‡æ–°å¯åŠ¨nginx    /usr/sbin/nginx -s reload
+16ã€docker exec -it fastdfs-nginx /bin/bash
+17ã€æœ€ç»ˆfastdfsä¸Šä¼ çš„æ–‡ä»¶ä¼šåœ¨ data/syncæ–‡ä»¶å¤¹ä¸­ç”Ÿæˆä¸€ä¸ªå« binlog.000 çš„æ–‡ä»¶ï¼Œé‡Œé¢è®°å½•äº†æ‰€æœ‰å·²ä¸Šä¼ çš„æ–‡ä»¶åˆ—è¡¨
+18ã€åŠ è½½Cå†™çš„limage.soçš„å‘
+   aã€é”™è¯¯ä¸ºnginxæ‰§è¡Œluaä»£ç è°ƒç”¨limage.soï¼Œç¬¬ä¸€æ¬¡å¯ä»¥è°ƒç”¨limage.soä¸­çš„image_sizeå‡½æ•°ï¼Œç¬¬äºŒæ¬¡å°±ä¼šå‡ºç°attempt to call global 'image_size' (a nil value)
+   bã€è§£å†³æ–¹æ¡ˆï¼š
+      è¦å°†fastdfs.luaä¸­çš„  local lim= require "limage"  local width,height= image_size(path) è¿™æ®µä»£ç ä¸­çš„ require "limage"æ”¾åˆ°nginx.confä¸­å»
+      æ­£ç¡®çš„å†™æ³•
         init_by_lua 'require "limage"';
 
 	## server port for fastdfs
@@ -74,7 +74,7 @@ docker build -t fastdfs-nginx ./
 	 listen       24002;
          ......
         
-#ÔÚfastdfs.luaÖĞ²Å²»»á³öÏÖattempt to call global 'image_size' (a nil value)µÄ´íÎó£¬·ñÔòÊÇÖ´ĞĞ´úÂëµÚÒ»´ÎÄÜÖ´ĞĞ£¬µ«ÊÇ£¬µÚ¶ş´Î¾Íµ÷ÓÃ²»ÁËÁË
+#åœ¨fastdfs.luaä¸­æ‰ä¸ä¼šå‡ºç°attempt to call global 'image_size' (a nil value)çš„é”™è¯¯ï¼Œå¦åˆ™æ˜¯æ‰§è¡Œä»£ç ç¬¬ä¸€æ¬¡èƒ½æ‰§è¡Œï¼Œä½†æ˜¯ï¼Œç¬¬äºŒæ¬¡å°±è°ƒç”¨ä¸äº†äº†
 ln -s /usr/local/src/lua-5.3.1/src/lua /usr/bin/lua
 
 ln -s /usr/local/src/lua-5.3.1/src/clua /usr/bin/clua
@@ -82,7 +82,7 @@ ln -s /usr/local/src/lua-5.3.1/src/clua /usr/bin/clua
 cp /usr/local/myshare/fastdfs-nginx/install/fastdfs/limage-master/bin/clib/limage.so   /usr/local/lib/lua/5.1/
 
 
-²é¿´nginxÒòÎªÈ±ÉÙlua¿â¶øÆô¶¯³ö´í
+æŸ¥çœ‹nginxå› ä¸ºç¼ºå°‘luaåº“è€Œå¯åŠ¨å‡ºé”™
 ldd $(whereis /usr/sbin/nginx)
 
 /usr/local/lib/lua/5.1/
