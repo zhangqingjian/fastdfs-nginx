@@ -91,6 +91,7 @@ docker run -itd \
   --name fastdfs-nginx \
   --network=host \
 --restart=always \
+   --ip=192.168.1.101 \
   -e TRACKER_SERVER=10.7.23.63:22122 \
   -v /etc/localtime:/etc/localtime:ro \
   -v /var/log/fdfs/:/data/fdfs/logs/ \
