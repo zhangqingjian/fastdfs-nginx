@@ -87,16 +87,15 @@ ldd $(whereis /usr/sbin/nginx)
 
 /usr/local/lib/lua/5.1/
 
-docker run -itd \
+  docker run -itd \
   --name fastdfs-nginx \
   --network=host \
---restart=always \
-   --ip=192.168.1.101 \
+  --restart=always \
   -e TRACKER_SERVER=10.7.23.63:22122 \
   -v /etc/localtime:/etc/localtime:ro \
   -v /var/log/fdfs/:/data/fdfs/logs/ \
   -v /usr/local/my/:/usr/local/myshare/ \
-  -v /data/fdfs/data/:/data/fdfs/data/ \
+  -v /usr/local/my/data/:/data/fdfs/data/ \
   -v /var/log/nginx/:/var/log/nginx/ \
   fastdfs-nginx \
   sh -c "/usr/bin/fdfs_trackerd /etc/fdfs/tracker.conf restart && /usr/bin/fdfs_storaged /etc/fdfs/storage.conf restart && /usr/sbin/nginx -g 'daemon off;'"
