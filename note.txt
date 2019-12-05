@@ -100,6 +100,7 @@ ldd $(whereis /usr/sbin/nginx)
   fastdfs-nginx \
   sh -c "/usr/bin/fdfs_trackerd /etc/fdfs/tracker.conf restart && /usr/bin/fdfs_storaged /etc/fdfs/storage.conf restart && /usr/sbin/nginx -g 'daemon off;'"
 
+上面的docker实例是没有问题的，如果出现23000的tracker没有启动起来，则需要docker restart fastdfs-nginx多重启几次
 
 图片编辑器：
 1、比如：如果想按照以高为准,宽度自适应，则只传h_*就可以了
