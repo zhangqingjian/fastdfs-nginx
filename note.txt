@@ -132,3 +132,26 @@ lua_package_path "/usr/local/myshare/fastdfs-nginx/lua
 4、这样每次需要调试lua，则可以透过vagrant 到docker，再到nginx对应的fastdfs.lua文件进行编辑，只要修改后重启nginx即可
 
  
+如果涉及到集群的问题
+比如
+tracker1   10.7.23.63:22122
+tracker2   10.7.23.64:22122
+storage1   10.7.23.63:23000
+storage2   10.7.23.63:23000
+nginx1   10.7.23.63:2
+nginx2   10.7.23.64
+1、修改fastdsf.lua文件
+fdfs:set_tracker("10.7.23.63", 22122)
+fdfs:set_tracker("10.7.23.64", 22122)
+2、多个group storage.conf
+[group1]
+group_name=group1
+storage_server_port=23000
+store_path_count=1
+store_path0=/data/fdfs
+
+[group2]
+group_name=group2
+storage_server_port=23000
+store_path_count=1
+store_path0=/data/fdfs
