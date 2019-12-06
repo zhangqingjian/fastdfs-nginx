@@ -87,6 +87,8 @@ ldd $(whereis /usr/sbin/nginx)
 
 /usr/local/lib/lua/5.1/
 
+19、如果出现22122、24002端口启动了，但是23000端口启动不了的情况，一般是因为启动过慢或者可以重新启动docker restart fastdfs-nginx
+
   docker run -itd \
   --name fastdfs-nginx \
   --network=host \
