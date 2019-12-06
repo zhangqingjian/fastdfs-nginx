@@ -1,5 +1,6 @@
 #!/bin/sh
-#set -e
+#set -e  insert multiply tracker_server
+## sed '2i 111\n222\n333' sed -i "s|tracker_server=.*$|tracker_server=${TRACKER_SERVER}\n tracker_server=${TRACKER_SERVER2} |g" /etc/fdfs/storage.conf
 if [ -n "$TRACKER_SERVER" ] ; then  
 sed -i "s|tracker_server=.*$|tracker_server=${TRACKER_SERVER}|g" /etc/fdfs/storage.conf
 fi
