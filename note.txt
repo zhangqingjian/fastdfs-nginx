@@ -100,6 +100,10 @@ ldd $(whereis /usr/sbin/nginx)
   fastdfs-nginx \
   sh -c "/usr/bin/fdfs_trackerd /etc/fdfs/tracker.conf restart && /usr/bin/fdfs_storaged /etc/fdfs/storage.conf restart && /usr/sbin/nginx -g 'daemon off;'"
 
+注释：
+a、其中/usr/local/my/:/usr/local/myshare/ \ 表示的是将/usr/local/my目录下的文件挂载到myshare下，但是因为nginx.conf配置了/usr/local/myshare/fastdfs-nginx/lua/fastdfs.lua，所以只要当需要进行测试优化fastdfs.lua这个文件的时候才需要挂载myshare文件夹。并且
+在my文件夹下创建/fastdfs-nginx/lua/fastdfs.lua。
+
 上面的docker实例是没有问题的，如果出现23000的tracker没有启动起来，则需要docker restart fastdfs-nginx多重启几次
 
 图片编辑器：
