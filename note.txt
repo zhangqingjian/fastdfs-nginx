@@ -138,8 +138,8 @@ tracker1   10.7.23.63:22122
 tracker2   10.7.23.64:22122
 storage1   10.7.23.63:23000
 storage2   10.7.23.63:23000
-nginx1   10.7.23.63:2
-nginx2   10.7.23.64
+nginx1   10.7.23.63:24002
+nginx2   10.7.23.64:24002
 1、修改fastdsf.lua文件
 fdfs:set_tracker("10.7.23.63", 22122)
 fdfs:set_tracker("10.7.23.64", 22122)
