@@ -112,7 +112,7 @@ RUN  cd /usr/src \
 	&& chmod +777 ./*  \
 	&& sh build-linux64.sh \
 	&& mkdir -p /usr/local/myshare/fastdfs-nginx/so \
-	&& cp ../bin/clib/limage.so /usr/local/myshare/fastdfs-nginx/so
+	&& cp ../bin/clib/limage.so /usr/local/myshare/fastdfs-nginx/so \
 	&& cp ../bin/clib/limage.so /usr/local/lib/lua/5.1/
 ## install nginx with extra modules
 ## refer to： https://github.com/nginxinc/docker-nginx/blob/1.13.2/mainline/alpine/Dockerfile
